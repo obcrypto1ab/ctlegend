@@ -39,54 +39,60 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center transition-colors duration-500 bg-[var(--bg-primary)] text-center font-sans selection:bg-cyan-500/30">
+    // Main Container - Allows scrolling if content is too tall
+    <div className="min-h-screen w-full relative transition-colors duration-500 bg-[var(--bg-primary)] text-center font-sans selection:bg-cyan-500/30 overflow-x-hidden">
 
-      {/* Background & Overlay */}
+      {/* 1. Background Layer (Video/Canvas) - Fixed, Z-Index -1 */}
       <ParticleBackground />
-      {/* Readability Overlay: Black 50% as requested */}
-      <div className="fixed inset-0 bg-black/50 pointer-events-none z-0" />
-      {/* Subtle Gradient to smooth edges */}
-      <div className="fixed inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--bg-primary)]/80 pointer-events-none z-0" />
+
+      {/* 2. Readability Overlay - Fixed or Absolute, Z-Index 0 */}
+      {/* 40-60% Black Overlay as requested */}
+      <div className="fixed inset-0 bg-black/60 pointer-events-none z-[0]" />
+
+      {/* Optional: Extra gradient for depth */}
+      <div className="fixed inset-0 bg-gradient-to-t from-[var(--bg-primary)]/90 via-transparent to-[var(--bg-primary)]/40 pointer-events-none z-[0]" />
 
       <ThemeToggle />
 
-      {/* Main Content Container */}
-      <div className="relative z-10 w-full max-w-5xl py-12 px-4 flex flex-col items-center justify-center min-h-[80vh]">
+      {/* 3. Content Wrapper - Relative, Z-Index 10 */}
+      <div className="relative z-[10] flex flex-col items-center justify-center min-h-screen w-full py-16 px-4">
 
-        {/* Header Section */}
-        <header className="animate-fade-in mb-12 transform hover:scale-[1.01] transition-transform duration-700">
-          <h1 className="text-6xl md:text-8xl font-black mb-4 tracking-tighter leading-tight">
-            <span className="text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">InfoFi</span>
-            <span className="text-gradient drop-shadow-[0_0_35px_rgba(212,0,255,0.5)]"> Legend</span>
-          </h1>
+        <div className="w-full max-w-5xl flex flex-col items-center">
+          {/* Header Section */}
+          <header className="animate-fade-in mb-16 transform hover:scale-[1.01] transition-transform duration-700 w-full">
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-black mb-6 tracking-tighter leading-tight">
+              <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">InfoFi</span>
+              <br className="md:hidden" />
+              <span className="text-gradient drop-shadow-[0_0_40px_rgba(212,0,255,0.6)]"> Legend</span>
+            </h1>
 
-          <div className="space-y-6 flex flex-col items-center">
-            <p className="text-2xl md:text-3xl text-cyan-300 font-light tracking-wide drop-shadow-[0_0_12px_rgba(0,234,255,0.4)] animate-pulse-slow">
-              The Next Wave Begins
-            </p>
+            <div className="space-y-8 flex flex-col items-center">
+              <p className="text-2xl md:text-4xl text-cyan-300 font-light tracking-wide drop-shadow-[0_0_15px_rgba(0,234,255,0.5)] animate-pulse-slow max-w-2xl">
+                The Next Wave Begins
+              </p>
 
-            <div className="inline-block px-8 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_0_20px_rgba(0,234,255,0.1)] hover:bg-white/10 transition-colors">
-              <span className="text-base md:text-lg text-gray-300 font-medium">
-                Elite community connections, curated for <span className="text-gradient font-bold">crypto legends</span>.
-              </span>
+              <div className="inline-block px-8 py-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_0_25px_rgba(0,234,255,0.15)] hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_35px_rgba(0,234,255,0.25)]">
+                <span className="text-base md:text-lg text-gray-200 font-medium">
+                  Elite community connections, curated for <span className="text-gradient font-bold">crypto legends</span>.
+                </span>
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        {/* Links Grid */}
-        <div className="w-full max-w-2xl flex flex-col gap-5 px-2">
-          {links.map((link, index) => (
-            <div key={index} className="animate-fade-in" style={{ animationDelay: `${0.2 + index * 0.1}s` }}>
-              <GlowingButton {...link} />
-            </div>
-          ))}
+          {/* Links Grid */}
+          <main className="w-full max-w-xl flex flex-col gap-6 px-2 mb-12">
+            {links.map((link, index) => (
+              <div key={index} className="animate-fade-in w-full" style={{ animationDelay: `${0.2 + index * 0.1}s` }}>
+                <GlowingButton {...link} />
+              </div>
+            ))}
+          </main>
+
+          <footer className="w-full pt-8 text-center text-[var(--text-secondary)] text-sm opacity-60 hover:opacity-100 transition-opacity">
+            <p className="tracking-widest uppercase text-xs">© 2025 InfoFi Legend • Future Is Now</p>
+          </footer>
         </div>
-
       </div>
-
-      <footer className="w-full py-8 text-center text-[var(--text-secondary)] text-sm z-10 relative opacity-60 hover:opacity-100 transition-opacity">
-        <p>© 2025 InfoFi Legend / The Future is Now.</p>
-      </footer>
     </div>
   );
 }
