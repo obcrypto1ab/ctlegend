@@ -16,16 +16,18 @@ const GlowingButton: React.FC<GlowingButtonProps> = ({ href, label, sublabel, ic
             rel="noopener noreferrer"
             className="group relative flex items-center justify-between py-5 px-8 my-4 w-full max-w-xl mx-auto 
                  glass-panel rounded-2xl transition-all duration-300 hover:scale-[1.02] 
-                 hover:shadow-[0_0_30px_rgba(0,234,255,0.25)] border border-white/10 hover:border-cyan-400/60
-                 overflow-hidden"
+                 hover:shadow-[0_0_40px_rgba(0,234,255,0.3)] border border-white/5 hover:border-cyan-400/80
+                 overflow-hidden active:scale-95"
             style={{ textDecoration: 'none' }}
         >
-            {/* Background Gradient on Hover */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 pointer-events-none" />
+            {/* Animated Gradient Background on Hover */}
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-cyan-500/10 
+                          translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 pointer-events-none" />
 
-            <div className="flex items-center gap-6 z-10 w-full justify-start">
+            <div className="flex items-center gap-6 z-10 w-full justify-start relative">
                 {icon && (
-                    <div className="p-3.5 rounded-xl bg-white/5 group-hover:bg-cyan-500/10 text-cyan-400 group-hover:text-cyan-300 transition-colors shadow-inner">
+                    <div className="p-3.5 rounded-xl bg-white/5 group-hover:bg-cyan-400/20 text-cyan-400 group-hover:text-cyan-200 
+                                  transition-all shadow-inner group-hover:shadow-[0_0_15px_rgba(0,234,255,0.4)]">
                         {icon}
                     </div>
                 )}
@@ -43,13 +45,14 @@ const GlowingButton: React.FC<GlowingButtonProps> = ({ href, label, sublabel, ic
 
             <ExternalLink
                 size={22}
-                className="text-gray-500 group-hover:text-cyan-400 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 z-10"
+                className="text-gray-500 group-hover:text-cyan-400 opacity-60 group-hover:opacity-100 transition-all duration-300 
+                         transform translate-x-4 group-hover:translate-x-0 z-10"
             />
 
-            {/* Neon Glow Overlay */}
+            {/* Intense Neon Glow Overlay */}
             <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{
-                    boxShadow: 'inset 0 0 25px rgba(0, 234, 255, 0.05)',
+                    boxShadow: 'inset 0 0 30px rgba(0, 234, 255, 0.1), inset 0 0 10px rgba(212, 0, 255, 0.05)',
                 }}
             />
         </a>

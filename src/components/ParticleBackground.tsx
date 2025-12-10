@@ -9,7 +9,7 @@ const ParticleBackground = () => {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        let particles: Particle[] = [];
+        let time = 0;
         let animationFrameId: number;
 
         const resizeCanvas = () => {
@@ -20,69 +20,78 @@ const ParticleBackground = () => {
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        class Particle {
-            x: number;
-            y: number;
-            size: number;
-            speedX: number;
-            speedY: number;
-            opacity: number;
+        // Wave parameters
+        const lines = 12; // Number of "energy" lines
 
-            constructor() {
-                this.x = Math.random() * canvas!.width;
-                this.y = Math.random() * canvas!.height;
-                this.size = Math.random() * 2 + 0.5; // Slightly larger for softness
-                this.speedX = Math.random() * 0.2 - 0.1; // Slower speed
-                this.speedY = Math.random() * 0.2 - 0.1;
-                this.opacity = Math.random() * 0.3 + 0.05; // Dimmer opacity
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                if (this.x > canvas!.width) this.x = 0;
-                if (this.x < 0) this.x = canvas!.width;
-                if (this.y > canvas!.height) this.y = 0;
-                if (this.y < 0) this.y = canvas!.height;
-            }
-
-            draw() {
-                if (!ctx) return;
-                const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-                ctx.fillStyle = isLight
-                    ? `rgba(0, 100, 200, ${this.opacity * 0.8})` // Darker blue for light mode
-                    : `rgba(0, 243, 255, ${this.opacity})`; // Cyan for dark mode
-
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        const init = () => {
-            particles = [];
-            for (let i = 0; i < 60; i++) { // Reduced count for cleaner look
-                particles.push(new Particle());
-            }
-        };
-
-        const animate = () => {
+        const draw = () => {
             if (!ctx) return;
+            // Clear but keep a tiny bit of trail for softness?? No, full clear for crisp video look.
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((particle) => {
-                particle.update();
-                particle.draw();
-            });
-            animationFrameId = requestAnimationFrame(animate);
+
+            // To be safe, fill black if dark mode, or handled by CSS background. 
+            // We'll let CSS handle the base BG color.
+
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Check theme for colors
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+
+            // Neon Palette
+            const color1 = isLight ? 'rgba(0, 153, 170, ' : 'rgba(0, 243, 255, '; // Cyan
+            const color2 = isLight ? 'rgba(153, 0, 204, ' : 'rgba(212, 0, 255, '; // Purple
+            const color3 = isLight ? 'rgba(0, 68, 170, ' : 'rgba(0, 102, 255, '; // Blue
+
+            // Create flowing waves
+            for (let i = 0; i < lines; i++) {
+                ctx.beginPath();
+                ctx.lineWidth = i % 2 === 0 ? 300 : 150; // Massively thick lines for "aura" look, not wireframe
+                // Blur essential for aura
+                ctx.shadowBlur = 60;
+                ctx.shadowColor = (i % 3 === 0) ? '#00eaff' : (i % 3 === 1) ? '#d400ff' : '#0066ff';
+
+                // Color selection based on index
+                let rColor = color1;
+                if (i % 3 === 1) rColor = color2;
+                if (i % 3 === 2) rColor = color3;
+
+                // Opacity pulses slightly
+                const opacity = 0.15 + Math.sin(time * 0.5 + i) * 0.05;
+                ctx.strokeStyle = rColor + opacity + ')';
+
+                // Draw sine wave
+                for (let x = -100; x < width + 100; x += 50) {
+                    // Complex wave function
+                    const yOffset = height / 2;
+                    // Intertwine waves
+                    const frequency = 0.002 + (i * 0.0005);
+                    const amplitude = height * 0.25;
+                    const flow = time * (0.8 + i * 0.1);
+
+                    const y = yOffset +
+                        Math.sin(x * frequency + flow) * amplitude +
+                        Math.cos(x * frequency * 0.5 - flow) * (amplitude * 0.5);
+
+                    if (x === -100) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                ctx.stroke();
+            }
+
+            // Add subtle floating particles on top for "dust/energy mites"
+            // (Optional, keeps the scene alive)
+
+            time += 0.01;
+            animationFrameId = requestAnimationFrame(draw);
         };
 
-        init();
-        animate();
+        draw();
 
-        // Re-init on theme change to update colors immediately (optional optimization)
         const observer = new MutationObserver(() => {
-            // Just rely on draw loop for color check, but could force redraw here
+            // Theme changed, next frame picks it up
         });
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
@@ -96,15 +105,7 @@ const ParticleBackground = () => {
     return (
         <canvas
             ref={canvasRef}
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                zIndex: -1,
-                pointerEvents: 'none',
-            }}
+            className="fixed top-0 left-0 w-full h-full z-[-1] pointer-events-none transition-opacity duration-1000"
         />
     );
 };

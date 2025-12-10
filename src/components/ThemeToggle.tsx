@@ -19,9 +19,9 @@ const ThemeToggle = () => {
             aria-label="Toggle Theme"
         >
             {theme === 'dark' ? (
-                <Sun className="text-yellow-400 group-hover:text-yellow-300 drop-shadow-[0_0_10px_rgba(255,255,0,0.5)]" size={24} />
+                <Sun className="text-yellow-300 group-hover:text-yellow-200 drop-shadow-[0_0_15px_rgba(255,255,0,0.6)]" size={24} />
             ) : (
-                <Moon className="text-cyan-600 group-hover:text-cyan-500" size={24} />
+                <Moon className="text-cyan-500 group-hover:text-cyan-400 drop-shadow-[0_0_10px_rgba(0,243,255,0.4)]" size={24} />
             )}
         </button>
     );
