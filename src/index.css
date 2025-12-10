@@ -1,0 +1,89 @@
+:root {
+  --color-neon-cyan: #00f3ff;
+  --color-neon-purple: #bc13fe;
+  --color-neon-blue: #0066ff;
+  --bg-dark: #050505;
+  --bg-dark-secondary: #0a0a0f;
+  
+  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  --glass-surface: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-highlight: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: white;
+  font-family: var(--font-main);
+  overflow-x: hidden;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Utilities */
+.glass-panel {
+  background: var(--glass-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, var(--color-neon-cyan), var(--color-neon-purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glow-text {
+  text-shadow: 0 0 20px rgba(0, 243, 255, 0.5), 0 0 40px rgba(188, 19, 254, 0.3);
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 5px var(--color-neon-cyan), 0 0 10px var(--color-neon-purple); }
+  50% { box-shadow: 0 0 20px var(--color-neon-cyan), 0 0 30px var(--color-neon-purple); }
+  100% { box-shadow: 0 0 5px var(--color-neon-cyan), 0 0 10px var(--color-neon-purple); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neon-purple);
+}
