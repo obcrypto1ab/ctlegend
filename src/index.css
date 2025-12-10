@@ -1,15 +1,41 @@
 :root {
-  --color-neon-cyan: #00f3ff;
-  --color-neon-purple: #bc13fe;
-  --color-neon-blue: #0066ff;
-  --bg-dark: #050505;
+  /* Dark Mode Default Controls */
+  --color-neon-cyan: #00eaff;
+  --color-neon-purple: #d400ff;
+
+  --bg-dark-primary: #050505;
   --bg-dark-secondary: #0a0a0f;
-  
-  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
-  
+  --text-dark-primary: #ffffff;
+  --text-dark-secondary: #aaaaaa;
+
+  --bg-light-primary: #f0f4f8;
+  --bg-light-secondary: #ffffff;
+  --text-light-primary: #1a1a1a;
+  --text-light-secondary: #555555;
+
+  /* Theme-aware variables (Default to Dark) */
+  --bg-primary: var(--bg-dark-primary);
+  --bg-secondary: var(--bg-dark-secondary);
+  --text-primary: var(--text-dark-primary);
+  --text-secondary: var(--text-dark-secondary);
+
   --glass-surface: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.05);
-  --glass-highlight: rgba(255, 255, 255, 0.1);
+
+  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+[data-theme='light'] {
+  --bg-primary: var(--bg-light-primary);
+  --bg-secondary: var(--bg-light-secondary);
+  --text-primary: var(--text-light-primary);
+  --text-secondary: var(--text-light-secondary);
+
+  --glass-surface: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --color-neon-cyan: #0099aa;
+  /* Darker for visibility on light */
+  --color-neon-purple: #9900cc;
 }
 
 * {
@@ -19,19 +45,20 @@
 }
 
 body {
-  background-color: var(--bg-dark);
-  color: white;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: var(--font-main);
   overflow-x: hidden;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 /* Utilities */
 .glass-panel {
   background: var(--glass-surface);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
@@ -41,28 +68,45 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  filter: drop-shadow(0 0 10px rgba(0, 234, 255, 0.3));
 }
 
-.glow-text {
-  text-shadow: 0 0 20px rgba(0, 243, 255, 0.5), 0 0 40px rgba(188, 19, 254, 0.3);
+.text-glow-strong {
+  text-shadow:
+    0 0 10px rgba(0, 234, 255, 0.5),
+    0 0 20px rgba(212, 0, 255, 0.3);
+}
+
+.gradient-overlay {
+  background: radial-gradient(circle at center, transparent 0%, var(--bg-primary) 100%);
+  pointer-events: none;
 }
 
 /* Animations */
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
+  0% {
+    transform: translateY(0px);
+  }
 
-@keyframes pulse-glow {
-  0% { box-shadow: 0 0 5px var(--color-neon-cyan), 0 0 10px var(--color-neon-purple); }
-  50% { box-shadow: 0 0 20px var(--color-neon-cyan), 0 0 30px var(--color-neon-purple); }
-  100% { box-shadow: 0 0 5px var(--color-neon-cyan), 0 0 10px var(--color-neon-purple); }
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-float {
@@ -77,13 +121,16 @@ body {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
-  background: var(--bg-dark);
+  background: var(--bg-primary);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--glass-border);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-neon-purple);
 }
